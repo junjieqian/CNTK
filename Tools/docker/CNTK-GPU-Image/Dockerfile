@@ -1,4 +1,4 @@
-FROM nvidia/cuda:7.5-cudnn5-devel
+FROM nvidia/cuda:7.5-cudnn4-devel
 
 RUN apt-get update && apt-get install -y --no-install-recommends \
         autotools-dev \
@@ -74,7 +74,7 @@ RUN BOOST_VERSION=1_60_0 && \
     BOOST_DOTTED_VERSION=$(echo $BOOST_VERSION | tr _ .) && \
     wget -q -O - https://sourceforge.net/projects/boost/files/boost/${BOOST_DOTTED_VERSION}/boost_${BOOST_VERSION}.tar.gz/download | tar -xzf - && \
     cd boost_${BOOST_VERSION} && \
-    ./bootstrap.sh --prefix=/usr/local/boost-${BOOST_DOTTED_VERSION} --with-libraries=filesystem,system,test  && \
+    ./bootstrap.sh --prefix=/usr/local/boost-${BOOST_DOTTED_VERSION} --with-libraries=filesystem,system,test,log  && \
     ./b2 -d0 -j"$(nproc)" install  && \
     rm -rf /boost_${BOOST_VERSION}
 
@@ -144,7 +144,7 @@ RUN git clone --depth=1 -b master https://github.com/Microsoft/CNTK.git . && \
     make -j"$(nproc)" all
 
 RUN cd Examples/Image/Miscellaneous/CIFAR-10 && \
-    python CifarDownload.py && \
+    python CIFAR_convert.py && \
     python CifarConverter.py cifar-10-batches-py && \
     cd ../../../..
 
