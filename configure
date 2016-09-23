@@ -77,6 +77,10 @@ py_check=bin/python
 py_versions=
 declare -A py_paths
 
+have_hdfs=no
+hdfs_path=
+hdfs_check=include/hdfs.h
+
 mathlib=
 
 default_use_1bitsgd=no
@@ -105,6 +109,7 @@ default_opencvs="opencv-3.1.0 opencv-3.0.0"
 default_protobuf="protobuf-3.1.0"
 default_libzips="libzip-1.1.2"
 default_swig="swig-3.0.10"
+default_hdfs="hadoop-2.7.3"
 
 function default_paths ()
 {
@@ -200,6 +205,11 @@ function find_opencv ()
 function find_libzip ()
 {
     find_dir "$default_libzips" "$libzip_check"
+}
+
+function find_hdfs ()
+{
+    find_dir "$default_hdfs" "$hdfs_check"
 }
 
 function is_hardlinked ()
@@ -332,7 +342,7 @@ function show_help ()
     echo "  --with-py34-path[=directory] $(show_default $(find_python 34))"
     echo "  --with-py35-path[=directory] $(show_default $(find_python 35))"
     echo "  --with-swig[=directory] $(show_default $(find_swig))"
-
+    echo "  --with-hdfs[=directory] $(show_default $(find_hdfs))"
     echo "Libraries search path:"
     for head in $(default_paths)
     do

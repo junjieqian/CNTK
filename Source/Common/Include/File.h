@@ -95,10 +95,12 @@ class File
 {
 private:
     std::wstring m_filename;
-    FILE* m_file;        // file handle
-    bool m_pcloseNeeded; // was opened with popen(), use pclose() when destructing
-    bool m_seekable;     // this stream is seekable
-    int m_options;       // FileOptions ored togther
+    FILE* m_file;         // file handle
+    hdfsFS *m_hdfsfs;     // hdfs fs
+    hdfsFile *m_hdfsfile; // hdfs file handle
+    bool m_pcloseNeeded;  // was opened with popen(), use pclose() when destructing
+    bool m_seekable;      // this stream is seekable
+    int m_options;        // FileOptions ored togther
     void Init(const wchar_t* filename, int fileOptions);
 
 public:

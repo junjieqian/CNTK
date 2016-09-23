@@ -6,11 +6,15 @@
 #ifndef _CRT_SECURE_NO_WARNINGS
 #define _CRT_SECURE_NO_WARNINGS // "secure" CRT not available on all platforms  --add this at the top of all CPP files that give "function or variable may be unsafe" warnings
 #endif
+
 #define _CRT_NONSTDC_NO_DEPRECATE // make VS accept POSIX functions without _
+#define FORMAT_SPECIALIZE // to get the specialized version of the format routines
+#define PCLOSE_ERROR -1
 
 #include "Basics.h"
-#define FORMAT_SPECIALIZE // to get the specialized version of the format routines
+#include "Hdfsfile.h"
 #include "File.h"
+
 #include <string>
 #include <stdint.h>
 #include <locale>
@@ -25,8 +29,6 @@
 #include <unistd.h>
 #include <linux/limits.h> // for PATH_MAX
 #endif
-
-#define PCLOSE_ERROR -1
 
 namespace Microsoft { namespace MSR { namespace CNTK {
 
@@ -82,6 +84,17 @@ template /*static*/ void File::MakeIntermediateDirs<wstring>(const wstring& file
 // all constructors call this
 void File::Init(const wchar_t* filename, int fileOptions)
 {
+    // If filename is a hdfs path, call Hdfs file init instead
+    if (filename.find("hdfs://") == 0)
+    {
+        int res = Init_hdfsfile(this, filename, fileOptions);
+        if (res != 0)
+        {
+            RuntimeError("File: Failed to initialize an HDFS file.");
+        }
+        return;
+    }
+
     m_filename = filename;
     m_options = fileOptions;
     if (m_filename.empty())

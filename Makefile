@@ -297,6 +297,7 @@ COMMON_SRC =\
 	$(SOURCEDIR)/Common/TimerUtility.cpp \
 	$(SOURCEDIR)/Common/fileutil.cpp \
 	$(SOURCEDIR)/Common/Sequences.cpp \
+	$(SOURCEDIR)/Common/Hdfs.cpp \
 
 MATH_SRC =\
 	$(SOURCEDIR)/Math/BatchNormalizationEngine.cpp \
